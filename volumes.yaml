@@ -1,0 +1,60 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: nfs-10.0.0.18-mediacms
+spec:
+  capacity:
+    storage: 10Gi # ignored
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: nfs
+  mountOptions:
+    - hard
+    - nfsvers=4.1
+  nfs:
+    path: /tank/storage/mediacms/mediacms
+    server: 10.0.0.18
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: nfs-claim-10.0.0.18-mediacms
+spec:
+  storageClassName: nfs
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 10Gi # ignored
+  volumeName: nfs-10.0.0.18-mediacms
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: local-mediacms-db
+  labels:
+    type: local
+spec:
+  capacity:
+    storage: 10Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadOnlyMany
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: manual
+  hostPath:
+    path: /usr/local/postgresql
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: local-mediacms-claim-db
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadOnlyMany
+  resources:
+    requests:
+      storage: 10Gi

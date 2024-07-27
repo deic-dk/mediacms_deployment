@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    mediacms-service: redis
+  name: redis
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      mediacms-service: redis
+  template:
+    metadata:
+      labels:
+        mediacms-service: redis
+    spec:
+      containers:
+        - image: redis:alpine
+          livenessProbe:
+            exec:
+              command:
+                - redis-cli
+                - ping
+            failureThreshold: 3
+            periodSeconds: 30
+            timeoutSeconds: 10
+          name: redis
+      restartPolicy: Always

@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    mediacms-service: mediadb
+  name: mediadb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      mediacms-service: mediadb
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        mediacms-service: mediadb
+    spec:
+      containers:
+        - env:
+            - name: POSTGRES_DB
+              value: mediacms
+            - name: POSTGRES_PASSWORD
+              value: mediacms
+            - name: POSTGRES_USER
+              value: mediacms
+            - name: TZ
+              value: Europe/London
+          image: postgres:15.2-alpine
+          name: mediadb
+          volumeMounts:
+            - name: local-mediacms-db
+              mountPath: /var/lib/postgresql/data
+      restartPolicy: Always
+      volumes:
+        - name: local-mediacms-db
+          persistentVolumeClaim:
+            claimName: local-mediacms-claim-db
+
