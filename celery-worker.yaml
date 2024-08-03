@@ -26,7 +26,7 @@ spec:
               value: "no"
             - name: ENABLE_UWSGI
               value: "no"
-          image: mediacms/mediacms:latest
+          image: sciencedata/mediacms_sciencedata:latest
           name: celery-worker
           volumeMounts:
             - name: nfs-claim-sciencedata-mediacms

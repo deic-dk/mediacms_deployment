@@ -47,7 +47,7 @@ spec:
               protocol: TCP
           volumeMounts:
             - name: nfs-claim-sciencedata-mediacms
-              mountPath: /home/mediacms.io/mediacms
+              mountPath: /home/mediacms.io/media_files
               readOnly: false
       restartPolicy: Always
       volumes:

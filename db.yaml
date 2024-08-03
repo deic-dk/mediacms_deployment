@@ -31,9 +31,28 @@ spec:
           volumeMounts:
             - name: local-mediacms-db
               mountPath: /var/lib/postgresql/data
+          ports:
+          - containerPort: 5432
       restartPolicy: Always
+      nodeName: peon162
       volumes:
         - name: local-mediacms-db
           persistentVolumeClaim:
             claimName: local-mediacms-claim-db
-
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    mediacms-service: mediadb
+    user: mediacms
+  name: mediadb
+spec:
+  ports:
+  - name: "5432"
+    port: 5432
+    targetPort: 5432
+  selector:
+    mediacms-service: mediadb
+status:
+  loadBalancer: {}

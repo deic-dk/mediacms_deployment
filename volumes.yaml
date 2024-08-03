@@ -14,7 +14,7 @@ spec:
     - hard
     - nfsvers=4.1
   nfs:
-    path: /tank/storage/mediacms/mediacms
+    path: /tank/storage/mediacms/media_files
     server: 10.0.0.18
 ---
 kind: PersistentVolumeClaim
