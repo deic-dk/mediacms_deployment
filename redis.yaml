@@ -13,6 +13,7 @@ spec:
     metadata:
       labels:
         mediacms-service: mediaredis
+        user: mediacms
     spec:
       containers:
         - image: redis:alpine

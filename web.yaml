@@ -6,9 +6,9 @@ metadata:
   name: mediaweb
 spec:
   ports:
-    - name: "80"
-      port: 80
-      targetPort: 80
+    - name: "8000"
+      port: 8000
+      targetPort: 8000
   selector:
     mediacms-service: mediaweb
 ---
@@ -29,9 +29,21 @@ spec:
     metadata:
       labels:
         mediacms-service: mediaweb
+        user: mediacms
     spec:
+      securityContext:
+        runAsUser: 80
+        runAsGroup: 1000
+        fsGroup: 1000
+        fsGroupChangePolicy: Always
+      imagePullSecrets:
+      - name: regcred
       containers:
         - env:
+            - name: ENABLE_UWSGI
+              value: "yes"
+            - name: ENABLE_NGINX
+              value: "yes"
             - name: ENABLE_CELERY_BEAT
               value: "no"
             - name: ENABLE_CELERY_LONG
@@ -40,15 +52,21 @@ spec:
               value: "no"
             - name: ENABLE_MIGRATIONS
               value: "no"
-          image: mediacms/mediacms:latest
+          image: sciencedata/mediacms_sciencedata:latest
           name: mediaweb
           ports:
-            - containerPort: 80
+            - containerPort: 8000
               protocol: TCP
           volumeMounts:
             - name: nfs-claim-sciencedata-mediacms
-              mountPath: /home/mediacms.io/media_files
+              mountPath: /home/mediacms.io/mediacms/media_files
               readOnly: false
+          securityContext:
+            capabilities:
+              add:
+              - SYS_CHROOT
+              - AUDIT_WRITE
+              - NET_ADMIN
       restartPolicy: Always
       volumes:
         - name: nfs-claim-sciencedata-mediacms

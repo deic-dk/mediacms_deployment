@@ -15,16 +15,21 @@ spec:
     metadata:
       labels:
         mediacms-service: celery-worker
+        user: mediacms
     spec:
       containers:
         - env:
-            - name: ENABLE_CELERY_BEAT
-              value: "no"
-            - name: ENABLE_MIGRATIONS
+            - name: ENABLE_UWSGI
               value: "no"
             - name: ENABLE_NGINX
               value: "no"
-            - name: ENABLE_UWSGI
+            - name: ENABLE_CELERY_BEAT
+              value: "no"
+            - name: ENABLE_CELERY_LONG
+              value: "yes"
+            - name: ENABLE_CELERY_SHORT
+              value: "yes"
+            - name: ENABLE_MIGRATIONS
               value: "no"
           image: sciencedata/mediacms_sciencedata:latest
           name: celery-worker

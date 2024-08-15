@@ -15,6 +15,7 @@ spec:
     metadata:
       labels:
         mediacms-service: celery-beat
+        user: mediacms
     spec:
       containers:
         - env:
@@ -22,6 +23,8 @@ spec:
               value: "no"
             - name: ENABLE_CELERY_SHORT
               value: "no"
+            - name: ENABLE_CELERY_BEAT
+              value: "yes"
             - name: ENABLE_MIGRATIONS
               value: "no"
             - name: ENABLE_NGINX

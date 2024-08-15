@@ -15,6 +15,7 @@ spec:
     metadata:
       labels:
         mediacms-service: mediadb
+        user: mediacms
     spec:
       containers:
         - env:
