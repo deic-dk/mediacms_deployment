@@ -2,21 +2,28 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    mediacms-service: celery-beat
-  name: celery-beat
+    mediacms-service: mediabeat
+  name: mediabeat
 spec:
   replicas: 1
   selector:
     matchLabels:
-      mediacms-service: celery-beat
+      mediacms-service: mediabeat
   strategy:
     type: Recreate
   template:
     metadata:
       labels:
-        mediacms-service: celery-beat
+        mediacms-service: mediabeat
         user: mediacms
     spec:
+      securityContext:
+        runAsUser: 80
+        runAsGroup: 1000
+        fsGroup: 1000
+        fsGroupChangePolicy: Always
+      imagePullSecrets:
+      - name: regcred
       containers:
         - env:
             - name: ENABLE_CELERY_LONG
@@ -32,13 +39,13 @@ spec:
             - name: ENABLE_UWSGI
               value: "no"
           image: mediacms/mediacms:latest
-          name: celery-beat
+          name: mediabeat
           volumeMounts:
             - name: nfs-claim-sciencedata-mediacms
-              mountPath: /home/mediacms.io/mediacms
+              mountPath: /home/mediacms.io/mediacms/media_files
               readOnly: false
       restartPolicy: Always
       volumes:
         - configMap:
-            name: celery-beat-cm0
-          name: celery-beat-cm0
+            name: mediabeat-cm0
+          name: mediabeat-cm0

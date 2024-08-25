@@ -2,21 +2,28 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    mediacms-service: celery-worker
-  name: celery-worker
+    mediacms-service: mediaworker
+  name: mediaworker
 spec:
   replicas: 1
   selector:
     matchLabels:
-      mediacms-service: celery-worker
+      mediacms-service: mediaworker
   strategy:
     type: Recreate
   template:
     metadata:
       labels:
-        mediacms-service: celery-worker
+        mediacms-service: mediaworker
         user: mediacms
     spec:
+      securityContext:
+        runAsUser: 80
+        runAsGroup: 1000
+        fsGroup: 1000
+        fsGroupChangePolicy: Always
+      imagePullSecrets:
+      - name: regcred
       containers:
         - env:
             - name: ENABLE_UWSGI
@@ -32,10 +39,10 @@ spec:
             - name: ENABLE_MIGRATIONS
               value: "no"
           image: sciencedata/mediacms_sciencedata:latest
-          name: celery-worker
+          name: mediaworker
           volumeMounts:
             - name: nfs-claim-sciencedata-mediacms
-              mountPath: /home/mediacms.io/mediacms
+              mountPath: /home/mediacms.io/mediacms/media_files
               readOnly: false
       restartPolicy: Always
       volumes:
