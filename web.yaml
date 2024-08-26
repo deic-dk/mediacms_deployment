@@ -52,6 +52,12 @@ spec:
               value: "no"
             - name: ENABLE_MIGRATIONS
               value: "no"
+            - name: SD_UID
+              value: "mediacms"
+            - name: HOME_SERVER
+              value: "10.2.0.18"
+            - name: PUBLIC_HOME_SERVER
+              value: "silo5.sciencedata.dk"
           image: sciencedata/mediacms_sciencedata:latest
           name: mediaweb
           ports:

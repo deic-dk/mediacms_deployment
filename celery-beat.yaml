@@ -38,6 +38,11 @@ spec:
               value: "no"
             - name: ENABLE_UWSGI
               value: "no"
+              value: "mediacms"
+            - name: HOME_SERVER
+              value: "10.2.0.18"
+            - name: PUBLIC_HOME_SERVER
+              value: "silo5.sciencedata.dk"
           image: mediacms/mediacms:latest
           name: mediabeat
           volumeMounts:
