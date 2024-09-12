@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    mediacms-service: mediaredis1
+  name: mediaredis1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      mediacms-service: mediaredis1
+  template:
+    metadata:
+      labels:
+        mediacms-service: mediaredis1
+        user: mediacms
+    spec:
+      containers:
+        - image: redis:alpine
+          livenessProbe:
+            exec:
+              command:
+                - redis-cli
+                - ping
+            failureThreshold: 3
+            periodSeconds: 30
+            timeoutSeconds: 10
+          name: mediaredis1
+          ports:
+          - containerPort: 6379
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    mediacms-service: mediaredis1
+    user: mediacms
+  name: mediaredis1
+spec:
+  ports:
+  - name: "6379"
+    port: 6379
+    targetPort: 6379
+  selector:
+    mediacms-service: mediaredis1
+status:
+  loadBalancer: {}
+  

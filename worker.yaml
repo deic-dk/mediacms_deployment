@@ -2,55 +2,61 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    mediacms-service: mediabeat
-  name: mediabeat
+    mediacms-service: mediaworker
+  name: mediaworker
 spec:
   replicas: 1
   selector:
     matchLabels:
-      mediacms-service: mediabeat
+      mediacms-service: mediaworker
   strategy:
     type: Recreate
   template:
     metadata:
       labels:
-        mediacms-service: mediabeat
+        mediacms-service: mediaworker
         user: mediacms
     spec:
       securityContext:
         runAsUser: 80
-        runAsGroup: 1000
-        fsGroup: 1000
+        runAsGroup: 80
+        fsGroup: 80
         fsGroupChangePolicy: Always
       imagePullSecrets:
       - name: regcred
       containers:
         - env:
-            - name: ENABLE_CELERY_LONG
-              value: "no"
-            - name: ENABLE_CELERY_SHORT
-              value: "no"
-            - name: ENABLE_CELERY_BEAT
-              value: "yes"
-            - name: ENABLE_MIGRATIONS
+            - name: ENABLE_UWSGI
               value: "no"
             - name: ENABLE_NGINX
               value: "no"
-            - name: ENABLE_UWSGI
+            - name: ENABLE_CELERY_BEAT
+              value: "no"
+            - name: ENABLE_CELERY_LONG
+              value: "yes"
+            - name: ENABLE_CELERY_SHORT
+              value: "yes"
+            - name: ENABLE_MIGRATIONS
               value: "no"
               value: "mediacms"
             - name: HOME_SERVER
               value: "10.2.0.18"
             - name: PUBLIC_HOME_SERVER
               value: "silo5.sciencedata.dk"
-          image: mediacms/mediacms:latest
-          name: mediabeat
+          image:  sciencedata/mediacms_sciencedata:latest
+          name: mediaworker
           volumeMounts:
             - name: nfs-claim-sciencedata-mediacms
               mountPath: /home/mediacms.io/mediacms/media_files
               readOnly: false
+          securityContext:
+            capabilities:
+              add:
+                - "SYS_CHROOT"
+                - "AUDIT_WRITE"
+                - "NET_ADMIN"
       restartPolicy: Always
       volumes:
-        - configMap:
-            name: mediabeat-cm0
-          name: mediabeat-cm0
+        - name: nfs-claim-sciencedata-mediacms
+          persistentVolumeClaim:
+            claimName: nfs-claim-10.0.0.18-mediacms
