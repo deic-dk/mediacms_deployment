@@ -9,6 +9,9 @@ spec:
     - name: "8000"
       port: 8000
       targetPort: 8000
+    - name: "22"
+      port: 22
+      targetPort: 22
   selector:
     mediacms-service: mediaweb1
 ---
@@ -68,6 +71,8 @@ spec:
           name: mediaweb1
           ports:
             - containerPort: 8000
+              protocol: TCP
+            - containerPort: 22
               protocol: TCP
           volumeMounts:
             - name: nfs-claim-sciencedata-mediacms
