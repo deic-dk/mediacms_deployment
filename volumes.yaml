@@ -15,6 +15,7 @@ spec:
     - nfsvers=4.1
     - noatime
     - nodiratime
+    - async
   nfs:
     path: /tank/storage/mediacms/media_files
     server: 10.0.0.18
