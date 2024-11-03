@@ -13,6 +13,8 @@ spec:
   mountOptions:
     - hard
     - nfsvers=4.1
+    - noatime
+    - nodiratime
   nfs:
     path: /tank/storage/mediacms/media_files
     server: 10.0.0.18
