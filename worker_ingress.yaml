@@ -53,6 +53,9 @@ spec:
             - name: nfs-claim-sciencedata-mediacms
               mountPath: /home/mediacms.io/mediacms/media_files
               readOnly: false
+          resources:
+            limits:
+              nvidia.com/gpu: 4
           securityContext:
             capabilities:
               add:
